@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import uuid
 import random
 from datetime import datetime
 
@@ -111,20 +110,21 @@ elif st.session_state.page == 2:
     st.write("Beim Vorbeigehen am Weinregal schauen Sie sich die Auswahl an.")
 
     images = [
-        "kR_nAh.jpg",
-        "kR_Ah.jpg",
-        "R_nAh.jpg",
-        "R_Ah.jpg"
-    ]
+        "R_o.jpg",     # Discount_High (neu oben)
+        "R_u.jpg",     # Discount_Low (unten)
+        "R_Ah.jpg",    # Discount_EyeLevel
 
+        "kR_o.jpg",    # NoDiscount_High (neu oben)
+        "kR_nAh.jpg",  # NoDiscount_Low
+        "kR_u.jpg"     # NoDiscount_EyeLevel (neu)
+    ]
     if "image" not in st.session_state:
         st.session_state.image = random.choice(images)
 
     st.image(st.session_state.image)
 
     st.write("Sie können das Geld entweder für den Kauf eines Weins verwenden oder es behalten.")
-    st.write("Wie würden Sie sich in dieser Situation entscheiden?")
-    st.write("Bitte treffen Sie eine spontane Entscheidung.")
+    st.write("Wie würden Sie sich in dieser Situation entscheiden? Treffen Sie eine spontane Entscheidung.")
 
     st.markdown("**Bitte wählen Sie eine Option <span style='color:red'>*</span>:**", unsafe_allow_html=True)
 
@@ -212,6 +212,9 @@ elif st.session_state.page == 4:
 # ===============================
 
 elif st.session_state.page == 5:
+    if st.button("⬅️ Zurück"):
+       st.session_state.page = 4
+       st.rerun()
 
     show_scale_legend()
 
@@ -244,9 +247,12 @@ elif st.session_state.page == 5:
 # ===============================
 
 elif st.session_state.page == 6:
+    if st.button("⬅️ Zurück"):
+       st.session_state.page = 5
+       st.rerun()
 
-    age = st.number_input("Alter", 18, 100)
-    gender = st.radio("Geschlecht", ["Männlich", "Weiblich", "Keine Angabe"])
+    age = st.number_input("Alter*", 18, 100)
+    gender = st.radio("Geschlecht*", ["Männlich", "Weiblich", "Keine Angabe"])
 
     st.write('')
     st.write("🎁 Verlosung (optional)")
@@ -256,13 +262,19 @@ elif st.session_state.page == 6:
 
     if st.button("Absenden"):
 
-        participant_id = str(uuid.uuid4())
+        existing_data = sheet_data.get_all_values()
+        participant_id = len(existing_data)
 
         condition_map = {
+            # DISCOUNT
+            "R_o.jpg": "Discount_High",
+            "R_u.jpg": "Discount_Low",
+            "R_Ah.jpg": "Discount_EyeLevel",
+
+            # NO DISCOUNT
+            "kR_o.jpg": "NoDiscount_High",
             "kR_nAh.jpg": "NoDiscount_Low",
-            "kR_Ah.jpg": "NoDiscount_High",
-            "R_nAh.jpg": "Discount_Low",
-            "R_Ah.jpg": "Discount_High"
+            "kR_u.jpg": "NoDiscount_EyeLevel"
         }
 
         condition = condition_map[st.session_state.image]
