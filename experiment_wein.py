@@ -7,6 +7,29 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 # ===============================
+# MAPPINGS (NEU)
+# ===============================
+
+blue_wine_position_map = {
+    "R_o.jpg": "oben Mitte",
+    "R_u.jpg": "unten Mitte",
+    "R_Ah.jpg": "Augenhöhe Mitte",
+    "kR_o.jpg": "oben Mitte",
+    "kR_u.jpg": "unten Mitte",
+    "kR_Ah.jpg": "Augenhöhe Mitte"
+}
+
+condition_map = {
+    "R_o.jpg": "Discount_High",
+    "R_u.jpg": "Discount_Low",
+    "R_Ah.jpg": "Discount_EyeLevel",
+
+    "kR_o.jpg": "NoDiscount_High",
+    "kR_u.jpg": "NoDiscount_Low",
+    "kR_Ah.jpg": "NoDiscount_EyeLevel"
+}
+
+# ===============================
 # GOOGLE SHEETS VERBINDUNG
 # ===============================
 
@@ -57,6 +80,9 @@ def show_scale_legend():
 if "page" not in st.session_state:
     st.session_state.page = 0
 
+if "no_discount_reason" not in st.session_state:
+    st.session_state.no_discount_reason = ""
+
 # ===============================
 # PAGE 0
 # ===============================
@@ -104,10 +130,14 @@ elif st.session_state.page == 2:
     if st.button("⬅️ Zurück"):
         st.session_state.page = 1
         st.rerun()
-
     st.write("Stellen Sie sich vor, Sie sind in einem Supermarkt und erledigen Ihren Einkauf.")
-    st.write("Sie haben für Ihren Einkauf ein Budget von 20 CHF. Davon haben Sie bereits 10 CHF ausgegeben, 10 CHF verbleiben.")
-    st.write("Beim Vorbeigehen am Weinregal schauen Sie sich die Auswahl an.")
+
+    st.write("Während Sie durch den Laden gehen, kommen Sie an einem Weinregal vorbei.")
+
+    st.write("Sie haben noch ein Restbudget von 10 CHF übrig.")
+    st.write("Sie können das Geld entweder für den Kauf eines Weins verwenden oder es behalten.")
+
+    st.write("Bitte betrachten Sie die folgende Situation genau und treffen Sie eine spontane Entscheidung, so, wie Sie es im Alltag tun würden.")
 
     images = [
         "R_o.jpg",     # Discount_High (neu oben)
@@ -115,16 +145,15 @@ elif st.session_state.page == 2:
         "R_Ah.jpg",    # Discount_EyeLevel
 
         "kR_o.jpg",    # NoDiscount_High (neu oben)
-        "kR_nAh.jpg",  # NoDiscount_Low
-        "kR_u.jpg"     # NoDiscount_EyeLevel (neu)
+        "kR_u.jpg",  # NoDiscount_Low
+        "kR_Ah.jpg"     # NoDiscount_EyeLevel (neu)
     ]
     if "image" not in st.session_state:
         st.session_state.image = random.choice(images)
 
     st.image(st.session_state.image)
 
-    st.write("Sie können das Geld entweder für den Kauf eines Weins verwenden oder es behalten.")
-    st.write("Wie würden Sie sich in dieser Situation entscheiden? Treffen Sie eine spontane Entscheidung.")
+    st.write("Wie würden Sie sich in dieser Situation entscheiden? ")
 
     st.markdown("**Bitte wählen Sie eine Option <span style='color:red'>*</span>:**", unsafe_allow_html=True)
 
@@ -144,10 +173,69 @@ elif st.session_state.page == 2:
         "Je nach Ihrer Auswahl handelt es sich dabei entweder um einen Wein oder den entsprechenden Geldbetrag."
     )
 
-    if st.button("Weiter"):
+    if st.button("Weiter", key="weiter_page2"):
         st.session_state.choice = choice
-        st.session_state.page = 3
+
+        # 👉 Position der blauen Flasche bestimmen
+        blue_position = blue_wine_position_map[st.session_state.image]
+
+        # 👉 Condition bestimmen (Discount oder nicht)
+        condition = condition_map[st.session_state.image]
+
+        # 👉 Prüfen ob Rabatt vorhanden ist
+        is_discount_condition = condition.startswith("Discount")
+
+        # 👉 Prüfen ob Rabatt gewählt wurde
+        chose_discount = choice == blue_position
+
+        # 👉 NUR wenn Rabatt da ist UND nicht gewählt wurde
+        if is_discount_condition and not chose_discount and choice != "Ich kaufe keinen Wein":
+            st.session_state.page = 25   # neue Seite
+        else:
+            st.session_state.page = 3
+
         st.rerun()
+# ===============================
+# PAGE 2.5 (WARUM KEIN RABATT)
+# ===============================
+
+elif st.session_state.page == 25:
+    if st.button("⬅️ Zurück", key="back_page25"):
+       st.session_state.page = 2
+       st.rerun()
+    st.write("Sie haben sich gegen das Sonderangebot entschieden.")
+  
+
+    reason = st.radio(
+        "Was war der Hauptgrund dafür? *",
+        [
+            "Ich bevorzuge diese Flasche",
+            "Die Qualität wirkt höher",
+            "Der Preisunterschied ist mir egal",
+            "Ich habe das Angebot nicht bemerkt",
+            "Zufällige Entscheidung",
+            "Andere Gründe"
+        ]
+    )
+
+    # 👉 Textfeld nur wenn "Andere Gründe"
+    other_text = ""
+    if reason == "Andere Gründe":
+        other_text = st.text_input("Bitte geben Sie den Grund an:")
+
+    # 👉 EIN Button
+    if st.button("Weiter", key="weiter_page25"):
+
+        if reason == "Andere Gründe" and other_text == "":
+            st.warning("Bitte geben Sie einen Grund ein.")
+        else:
+            if reason == "Andere Gründe":
+                st.session_state.no_discount_reason = other_text
+            else:
+                st.session_state.no_discount_reason = reason
+
+            st.session_state.page = 3
+            st.rerun()
 
 # ===============================
 # PAGE 3
@@ -159,15 +247,15 @@ elif st.session_state.page == 3:
         st.session_state.page = 2
         st.rerun()
 
+    st.write("Die folgenden Aussagen beziehen sich auf Ihre Wahrnehmung des Angebots sowie auf Ihren Entscheidungsprozess. "
+         "Bitte geben Sie an, inwieweit Sie den Aussagen zustimmen.")
+    
     show_scale_legend()
 
     with st.form("mechanisms_form"):
 
         deal1 = st.radio("Das Angebot wirkt attraktiv", list(range(1,6)), horizontal=True)
         deal2 = st.radio("Ich habe das Gefühl, Geld zu sparen", list(range(1,6)), horizontal=True)
-
-        impuls1 = st.radio("Ich hatte spontan Lust diesen Wein zu kaufen", list(range(1,6)), horizontal=True)
-        impuls2 = st.radio("Meine Entscheidung war eher spontan als geplant", list(range(1,6)), horizontal=True)
 
         ease = st.radio("Die Entscheidung fiel mir leicht", list(range(1,6)), horizontal=True)
         quality = st.radio("Der Wein wirkt hochwertig", list(range(1,6)), horizontal=True)
@@ -178,8 +266,6 @@ elif st.session_state.page == 3:
             st.session_state.data_mech = {
                 "deal1": deal1,
                 "deal2": deal2,
-                "impuls1": impuls1,
-                "impuls2": impuls2,
                 "ease": ease,
                 "quality": quality
             }
@@ -247,23 +333,28 @@ elif st.session_state.page == 5:
 # ===============================
 
 elif st.session_state.page == 6:
-    if st.button("⬅️ Zurück"):
-       st.session_state.page = 5
-       st.rerun()
+    
 
-    age = st.number_input("Alter*", 18, 100)
-    gender = st.radio("Geschlecht*", ["Männlich", "Weiblich", "Keine Angabe"])
+    age = st.number_input("Alter:", 18, 100)
+    gender = st.radio("Geschlecht:", ["Männlich", "Weiblich", "Keine Angabe"])
 
+    st.divider()
     st.write('')
     st.write("🎁 Verlosung (optional)")
-    st.write("Wenn Sie an der Verlosung teilnehmen möchten, können Sie hier freiwillig Ihre E-Mail-Adresse angeben.")
-    st.write("Die E-Mail-Adresse wird ausschließlich für die Durchführung der Verlosung verwendet und nicht mit Ihren Antworten verknüpft.")
+    st.write(
+    "Unter allen Teilnehmenden wird ein Gewinn verlost. "
+    "Je nach Ihrer Auswahl handelt es sich dabei entweder um einen Wein oder den entsprechenden Geldbetrag."
+    )
+    st.write("Wenn Sie an der Verlosung teilnehmen möchten, können Sie hier freiwillig Ihre E-Mail-Adresse angeben.*")
+   
     email = st.text_input("E-Mail (optional)")
+    st.caption("*Die E-Mail-Adresse wird ausschliesslich für die Durchführung der Verlosung verwendet und nicht mit Ihren Antworten verknüpft.")
 
-    if st.button("Absenden"):
+    if st.button("Absenden", key="absenden_button"):
 
         existing_data = sheet_data.get_all_values()
         participant_id = len(existing_data)
+        no_discount_reason = st.session_state.no_discount_reason
 
         condition_map = {
             # DISCOUNT
@@ -273,8 +364,8 @@ elif st.session_state.page == 6:
 
             # NO DISCOUNT
             "kR_o.jpg": "NoDiscount_High",
-            "kR_nAh.jpg": "NoDiscount_Low",
-            "kR_u.jpg": "NoDiscount_EyeLevel"
+            "kR_u.jpg": "NoDiscount_Low",
+            "kR_Ah.jpg": "NoDiscount_EyeLevel"
         }
 
         condition = condition_map[st.session_state.image]
@@ -300,11 +391,11 @@ elif st.session_state.page == 6:
              condition,
              0 if st.session_state.choice == "Ich kaufe keinen Wein" else 1,
              st.session_state.choice,
+ 
 
              st.session_state.data_mech["deal1"],
              st.session_state.data_mech["deal2"],
-             st.session_state.data_mech["impuls1"],
-             st.session_state.data_mech["impuls2"],
+
              st.session_state.data_mech["ease"],
              st.session_state.data_mech["quality"],
 
@@ -322,13 +413,13 @@ elif st.session_state.page == 6:
          ], value_input_option="RAW")
 
         # REASONS
-        if st.session_state.explanation != "":
-            sheet_reasons.append_row([
+        sheet_reasons.append_row([
             participant_id,
             condition,
             st.session_state.choice,
             st.session_state.explanation,
-            datetime.now().strftime("%d.%m.%Y %H:%M")
+            st.session_state.no_discount_reason,
+           datetime.now().strftime("%d.%m.%Y %H:%M")
         ], value_input_option="RAW")
 
         # EMAIL
