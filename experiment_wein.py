@@ -7,7 +7,7 @@ import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
 # ===============================
-# MAPPINGS (NEU)
+# MAPPINGS 
 # ===============================
 
 blue_wine_position_map = {
@@ -140,13 +140,13 @@ elif st.session_state.page == 2:
     st.write("Bitte betrachten Sie die folgende Situation genau und treffen Sie eine spontane Entscheidung, so, wie Sie es im Alltag tun würden.")
 
     images = [
-        "R_o.jpg",     # Discount_High (neu oben)
-        "R_u.jpg",     # Discount_Low (unten)
+        "R_o.jpg",     # Discount_High 
+        "R_u.jpg",     # Discount_Low 
         "R_Ah.jpg",    # Discount_EyeLevel
 
-        "kR_o.jpg",    # NoDiscount_High (neu oben)
+        "kR_o.jpg",    # NoDiscount_High 
         "kR_u.jpg",  # NoDiscount_Low
-        "kR_Ah.jpg"     # NoDiscount_EyeLevel (neu)
+        "kR_Ah.jpg"     # NoDiscount_EyeLevel 
     ]
     if "image" not in st.session_state:
         st.session_state.image = random.choice(images)
@@ -176,19 +176,14 @@ elif st.session_state.page == 2:
     if st.button("Weiter", key="weiter_page2"):
         st.session_state.choice = choice
 
-        # 👉 Position der blauen Flasche bestimmen
         blue_position = blue_wine_position_map[st.session_state.image]
 
-        # 👉 Condition bestimmen (Discount oder nicht)
         condition = condition_map[st.session_state.image]
 
-        # 👉 Prüfen ob Rabatt vorhanden ist
         is_discount_condition = condition.startswith("Discount")
 
-        # 👉 Prüfen ob Rabatt gewählt wurde
         chose_discount = choice == blue_position
 
-        # 👉 NUR wenn Rabatt da ist UND nicht gewählt wurde
         if is_discount_condition and not chose_discount and choice != "Ich kaufe keinen Wein":
             st.session_state.page = 25   # neue Seite
         else:
@@ -196,7 +191,7 @@ elif st.session_state.page == 2:
 
         st.rerun()
 # ===============================
-# PAGE 2.5 (WARUM KEIN RABATT)
+# PAGE 2.5 
 # ===============================
 
 elif st.session_state.page == 25:
@@ -218,12 +213,12 @@ elif st.session_state.page == 25:
         ]
     )
 
-    # 👉 Textfeld nur wenn "Andere Gründe"
+    # Textfeld nur wenn "Andere Gründe"
     other_text = ""
     if reason == "Andere Gründe":
         other_text = st.text_input("Bitte geben Sie den Grund an:")
 
-    # 👉 EIN Button
+    
     if st.button("Weiter", key="weiter_page25"):
 
         if reason == "Andere Gründe" and other_text == "":
@@ -329,7 +324,7 @@ elif st.session_state.page == 5:
             st.rerun()
 
 # ===============================
-# PAGE 6 (ABSENDEN)
+# PAGE 6 
 # ===============================
 
 elif st.session_state.page == 6:
