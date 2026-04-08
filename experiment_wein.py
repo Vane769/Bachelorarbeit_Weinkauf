@@ -153,7 +153,40 @@ elif st.session_state.page == 2:
         "kR_Ah.jpg"     # NoDiscount_EyeLevel 
     ]
     if "image" not in st.session_state:
-        st.session_state.image = random.choice(images)
+       
+       counts = sheet_data.col_values(3)[1:]  # condition-Spalte, ohne Header
+       target_n = 25
+
+       condition_counts = {
+           "Discount_High": counts.count("Discount_High"),
+           "Discount_EyeLevel": counts.count("Discount_EyeLevel"),
+           "Discount_Low": counts.count("Discount_Low"),
+           "NoDiscount_High": counts.count("NoDiscount_High"),
+           "NoDiscount_EyeLevel": counts.count("NoDiscount_EyeLevel"),
+           "NoDiscount_Low": counts.count("NoDiscount_Low"),
+       }
+
+       condition_to_image = {
+           "Discount_High": "R_o.jpg",
+           "Discount_Low": "R_u.jpg",
+           "Discount_EyeLevel": "R_Ah.jpg",
+           "NoDiscount_High": "kR_o.jpg",
+           "NoDiscount_Low": "kR_u.jpg",
+           "NoDiscount_EyeLevel": "kR_Ah.jpg",
+       }
+
+    
+       available_conditions = [
+           cond for cond, count in condition_counts.items()
+           if count < target_n
+       ]
+
+       if not available_conditions:
+           chosen_condition = random.choice(list(condition_counts.keys()))
+       else:
+           chosen_condition = random.choice(available_conditions)
+
+       st.session_state.image = condition_to_image[chosen_condition]
 
     st.image(st.session_state.image)
 
