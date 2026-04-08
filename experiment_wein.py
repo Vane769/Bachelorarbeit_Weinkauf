@@ -88,6 +88,14 @@ if "no_discount_reason" not in st.session_state:
 # ===============================
 
 if st.session_state.page == 0:
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
     st.write("Bitte bestätigen Sie die folgenden Punkte, bevor Sie fortfahren:")
 
@@ -103,6 +111,14 @@ if st.session_state.page == 0:
 # ===============================
 
 elif st.session_state.page == 1:
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
 
     if st.button("⬅️ Zurück"):
         st.session_state.page = 0
@@ -126,7 +142,14 @@ elif st.session_state.page == 1:
 # ===============================
 
 elif st.session_state.page == 2:
-
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
     if st.button("⬅️ Zurück"):
         st.session_state.page = 1
         st.rerun()
@@ -137,7 +160,7 @@ elif st.session_state.page == 2:
     st.write("Sie haben noch ein Restbudget von 10 CHF übrig.")
     st.write("Sie können das Geld entweder für den Kauf eines Weins verwenden oder es behalten.")
 
-    st.write("Bitte betrachten Sie die folgende Situation genau und treffen Sie eine spontane Entscheidung, so, wie Sie es im Alltag tun würden.")
+    st.write("Bitte schauen Sie sich die folgende Situation kurz an und treffen Sie eine spontane Entscheidung, so wie Sie es im Alltag tun würden.")
 
     images = [
         "R_o.jpg",     # Discount_High 
@@ -237,7 +260,14 @@ elif st.session_state.page == 25:
 # ===============================
 
 elif st.session_state.page == 3:
-
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
     if st.button("⬅️ Zurück"):
         st.session_state.page = 2
         st.rerun()
@@ -272,7 +302,14 @@ elif st.session_state.page == 3:
 # ===============================
 
 elif st.session_state.page == 4:
-
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
     with st.form("check_form"):
 
         discount = st.radio("Haben Sie einen Rabatt erkannt?", ["Ja", "Nein", "Unsicher"])
@@ -293,6 +330,15 @@ elif st.session_state.page == 4:
 # ===============================
 
 elif st.session_state.page == 5:
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
     if st.button("⬅️ Zurück"):
        st.session_state.page = 4
        st.rerun()
@@ -328,7 +374,17 @@ elif st.session_state.page == 5:
 # ===============================
 
 elif st.session_state.page == 6:
-    
+    st.markdown(
+        """
+        <script>
+            window.scrollTo(0, 0);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+    if st.button("⬅️ Zurück"):
+        st.session_state.page = 5
+        st.rerun()
 
     age = st.number_input("Alter:", 18, 100)
     gender = st.radio("Geschlecht:", ["Männlich", "Weiblich", "Keine Angabe"])
