@@ -240,6 +240,7 @@ elif st.session_state.page == 25:
 # ===============================
 
 elif st.session_state.page == 3:
+    st.markdown("<br><br>", unsafe_allow_html=True)
     if st.button("⬅️ Zurück"):
         st.session_state.page = 2
         st.rerun()
@@ -331,8 +332,7 @@ elif st.session_state.page == 5:
 # ===============================
 
 elif st.session_state.page == 6:
-    st.write("")
-    st.write("")
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
     if st.button("⬅️ Zurück"):
         st.session_state.page = 5
