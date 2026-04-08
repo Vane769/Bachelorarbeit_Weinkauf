@@ -68,7 +68,7 @@ sheet_data, sheet_reasons, sheet_emails = get_sheets()
 # UI START
 # ===============================
 
-st.markdown("## Studie zum Entscheidungsverhalten<br>beim (W)einkauf 🍷", unsafe_allow_html=True)
+st.markdown("## Studie zum Entscheidungs-<br>verhalten beim (W)einkauf 🍷", unsafe_allow_html=True)
 
 
 def show_scale_legend():
