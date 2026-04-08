@@ -91,7 +91,9 @@ if st.session_state.page == 0:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
@@ -114,11 +116,14 @@ elif st.session_state.page == 1:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+
 
     if st.button("⬅️ Zurück"):
         st.session_state.page = 0
@@ -145,11 +150,14 @@ elif st.session_state.page == 2:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+
     if st.button("⬅️ Zurück"):
         st.session_state.page = 1
         st.rerun()
@@ -218,6 +226,18 @@ elif st.session_state.page == 2:
 # ===============================
 
 elif st.session_state.page == 25:
+
+    st.markdown(
+        """
+        <script>
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
     if st.button("⬅️ Zurück", key="back_page25"):
        st.session_state.page = 2
        st.rerun()
@@ -263,11 +283,24 @@ elif st.session_state.page == 3:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+    st.markdown('<div id="top"></div>', unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <script>
+            document.getElementById("top").scrollIntoView();
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
     if st.button("⬅️ Zurück"):
         st.session_state.page = 2
         st.rerun()
@@ -305,11 +338,14 @@ elif st.session_state.page == 4:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+
     with st.form("check_form"):
 
         discount = st.radio("Haben Sie einen Rabatt erkannt?", ["Ja", "Nein", "Unsicher"])
@@ -333,11 +369,14 @@ elif st.session_state.page == 5:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+
 
     if st.button("⬅️ Zurück"):
        st.session_state.page = 4
@@ -377,11 +416,24 @@ elif st.session_state.page == 6:
     st.markdown(
         """
         <script>
-            window.scrollTo(0, 0);
+            setTimeout(function() {
+                window.scrollTo(0, 0);
+            }, 100);
         </script>
         """,
         unsafe_allow_html=True
     )
+    st.markdown('<div id="top"></div>', unsafe_allow_html=True)
+
+    st.markdown(
+        """
+        <script>
+            document.getElementById("top").scrollIntoView();
+        </script>
+        """,
+        unsafe_allow_html=True
+    )
+
     if st.button("⬅️ Zurück"):
         st.session_state.page = 5
         st.rerun()
