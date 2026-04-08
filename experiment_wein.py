@@ -153,10 +153,7 @@ elif st.session_state.page == 2:
         "kR_Ah.jpg"     # NoDiscount_EyeLevel 
     ]
     if "image" not in st.session_state:
-        existing_data = sheet_data.get_all_values()
-        participant_id = len(existing_data)
-
-        st.session_state.image = images[participant_id % 6]
+        st.session_state.image = random.choice(images)
 
     st.image(st.session_state.image)
 
