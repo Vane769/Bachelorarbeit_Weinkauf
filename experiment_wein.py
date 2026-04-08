@@ -91,10 +91,11 @@ if "no_discount_reason" not in st.session_state:
 if st.session_state.page == 0:
 
     st.write("Bitte bestätigen Sie die folgenden Punkte, bevor Sie fortfahren:")
-    st.caption("Hinweis: Beide Kästchen müssen ausgewählt werden, um fortzufahren.")
 
     age_check = st.checkbox("Ich bin mindestens 18 Jahre alt")
     consent = st.checkbox("Ich stimme der Teilnahme zu")
+
+    st.caption("Hinweis: Beide Kästchen müssen ausgewählt werden, um fortzufahren.")
 
     if st.button("Weiter") and age_check and consent:
         st.session_state.page = 1
