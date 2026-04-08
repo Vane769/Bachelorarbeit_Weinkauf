@@ -448,4 +448,4 @@ elif st.session_state.page == 7:
     st.write("Vielen Dank für Ihre Teilnahme! 🙏")
 
 elif st.session_state.page == 99:
-    st.write("Diese Studie richtet sich an Wein-Käufer.")
+    st.write("Diese Studie richtet sich an Personen, die gelegentlich oder regelmässig Wein kaufen. Vielen Dank, dass Sie sich trotzdem die Zeit genommen haben!😊")
