@@ -68,7 +68,8 @@ sheet_data, sheet_reasons, sheet_emails = get_sheets()
 # UI START
 # ===============================
 
-st.title("Studie zum Entscheidungsverhalten beim (W)einkauf 🍷")
+st.markdown("## Studie zum Entscheidungsverhalten<br>beim (W)einkauf 🍷", unsafe_allow_html=True)
+
 
 def show_scale_legend():
     st.caption("1 = stimme überhaupt nicht zu | 3 = neutral | 5 = stimme voll zu")
