@@ -376,8 +376,8 @@ elif st.session_state.page == 6:
         st.session_state.page = 5
         st.rerun()
 
-    age = st.number_input("Alter:", 18, 100)
-    gender = st.radio("Geschlecht:", ["Männlich", "Weiblich", "Keine Angabe"])
+    age = st.number_input("Alter*:", min_value=18, max_value=100, value=None)
+    gender = st.radio("Geschlecht*:", ["Männlich", "Weiblich", "Keine Angabe"])
 
     st.divider()
     st.write('')
@@ -393,6 +393,11 @@ elif st.session_state.page == 6:
 
     if st.button("Absenden", key="absenden_button"):
 
+        if age is None:
+            st.warning("Bitte geben Sie Ihr Alter an.")
+            st.stop()
+
+        
         existing_data = sheet_data.get_all_values()
         participant_id = len(existing_data)
         no_discount_reason = st.session_state.no_discount_reason
@@ -409,6 +414,7 @@ elif st.session_state.page == 6:
             "kR_Ah.jpg": "NoDiscount_EyeLevel"
         }
 
+        # REST AUCH HIER DRIN LASSEN!
         condition = condition_map[st.session_state.image]
 
         data = {
