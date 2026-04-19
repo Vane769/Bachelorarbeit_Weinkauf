@@ -155,7 +155,7 @@ elif st.session_state.page == 2:
     if "image" not in st.session_state:
        
        counts = sheet_data.col_values(3)[1:]  # condition-Spalte, ohne Header
-       target_n = 25
+       target_n = 35
 
        condition_counts = {
            "Discount_High": counts.count("Discount_High"),
@@ -311,7 +311,9 @@ elif st.session_state.page == 3:
 # ===============================
 
 elif st.session_state.page == 4:
-
+    if st.button("⬅️ Zurück"):
+        st.session_state.page = 3
+        st.rerun()
     with st.form("check_form"):
 
         discount = st.radio("Haben Sie einen Rabatt erkannt?", ["Ja", "Nein", "Unsicher"])
